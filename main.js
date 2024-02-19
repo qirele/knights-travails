@@ -33,26 +33,30 @@ function knightMoves(from, to) {
     }
   }
 
-  // start at the end
-  let i = adjLists.length - 1;
-  let currentVertex = adjLists[i].vertex;
+
+  let result = [from, ...findPath(adjLists), to];
+
+  return result;
+}
+
+function findPath(lists) {
+  // start from the end
+  let i = lists.length - 1;
+  let currentVertex = lists[i].vertex;
   i--;
   let between = [];
 
-  while (i !== 0) {
-    let result = adjLists[i].adj.findIndex(el => el[0] === currentVertex[0] && el[1] === currentVertex[1]) !== -1;
+  while (i !== 0) { // follow currentVertex to the beginning of the array
+    let result = lists[i].adj.findIndex(el => el[0] === currentVertex[0] && el[1] === currentVertex[1]) !== -1;
     if (result) {
-      between.push(adjLists[i].vertex);
-      currentVertex = adjLists[i].vertex;
+      between.unshift(lists[i].vertex);
+      currentVertex = lists[i].vertex;
     }
 
     i--;
   }
 
-  let result = [from, ...(between.reverse()), adjLists[adjLists.length - 1].vertex, to];
-  console.log(result);
-
-  return adjLists;
+  return [...between, lists[lists.length - 1].vertex]
 }
 
 
@@ -79,4 +83,7 @@ function legalMoves(pos) {
   return arr.filter(el => el !== -1);
 }
 
-knightMoves([0, 0], [7, 7]);
+console.log(knightMoves([3, 3], [4, 3]));
+console.log(knightMoves([3, 3], [0, 0]));
+console.log(knightMoves([7, 7], [0, 0]));
+console.log(knightMoves([3, 3], [5, 6]));
