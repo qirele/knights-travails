@@ -27,47 +27,33 @@ function knightMoves(from, to) {
 
     });
 
-    adjLists.push(adj);
+    adjLists.push({ vertex, adj });
     if (isFound) {
       break;
     }
   }
 
+  // start at the end
+  let i = adjLists.length - 1;
+  let currentVertex = adjLists[i].vertex;
+  i--;
+  let between = [];
+
+  while (i !== 0) {
+    let result = adjLists[i].adj.findIndex(el => el[0] === currentVertex[0] && el[1] === currentVertex[1]) !== -1;
+    if (result) {
+      between.push(adjLists[i].vertex);
+      currentVertex = adjLists[i].vertex;
+    }
+
+    i--;
+  }
+
+  let result = [from, ...(between.reverse()), adjLists[adjLists.length - 1].vertex, to];
+  console.log(result);
 
   return adjLists;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function outOfBounds(pos) {
@@ -93,4 +79,4 @@ function legalMoves(pos) {
   return arr.filter(el => el !== -1);
 }
 
-knightMoves([0, 0], [1, 6]);
+knightMoves([0, 0], [7, 7]);
