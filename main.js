@@ -1,44 +1,73 @@
 function knightMoves(from, to) {
-  const neighbors = legalMoves(from);
+  const visited = [];
+  const queue = [from];
+  const adjLists = [];
 
-  const visited = [from];
-  const queue = [...neighbors];
-  const isDestinationHere = el => el[0] === to[0] && el[1] === to[1];
+  while (queue.length !== 0) {
+    const vertex = queue.shift();
+    visited.push(vertex);
+    const neighbors = legalMoves(vertex);
+    const adj = [];
 
-  // see if the neighbors are equal to `to`
-  if (queue.findIndex(isDestinationHere) === -1) {
-    // continue looking
+    let isFound = false;
+    neighbors.forEach(n => {
+      adj.push(n);
 
-    while (queue.length > 0) {
-      let pos = queue.shift();
-      visited.push(pos)
-
-      let posNeighbors = legalMoves(pos);
-
-      // isDestination here?
-      let result = posNeighbors.findIndex(isDestinationHere);
-      if (result !== -1) {
-        // we found it!
-      } else {
-        // push only thos which aren't in `visited` and aren't in `queue`
-        const excludeVisited = removeElementsFromArray(posNeighbors, visited);
-        const excludeQueue = removeElementsFromArray(excludeVisited, queue);
-        queue.push(...excludeQueue);
+      // check n against visited
+      let isNeighborInVisited = visited.findIndex(el => el[0] === n[0] && el[1] === n[1]);
+      if (isNeighborInVisited === -1) {
+        queue.push(n);
       }
-    }
 
-  } else {
-    return [from, to]
-  }
+      // check if n is `to`
+      if (n[0] === to[0] && n[1] === to[1]) {
+        // ladies und gentlemen, we got im
+        isFound = true;
+      }
 
-  function removeElementsFromArray(array, elements) {
-    const difference = array.filter(arrEl => {
-      const [x, y] = arrEl;
-      return elements.findIndex(el => el[0] === x && el[1] === y) === -1 ? true : false;
     });
-    return difference;
+
+    adjLists.push(adj);
+    if (isFound) {
+      break;
+    }
   }
+
+
+  return adjLists;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function outOfBounds(pos) {
@@ -54,14 +83,14 @@ function legalMoves(pos) {
 
   arr.push(outOfBounds([x - 1, y + 2]));
   arr.push(outOfBounds([x + 1, y + 2]));
+  arr.push(outOfBounds([x + 2, y - 1]));
+  arr.push(outOfBounds([x + 2, y + 1]));
   arr.push(outOfBounds([x - 1, y - 2]));
   arr.push(outOfBounds([x + 1, y - 2]));
   arr.push(outOfBounds([x - 2, y - 1]));
   arr.push(outOfBounds([x - 2, y + 1]));
-  arr.push(outOfBounds([x + 2, y - 1]));
-  arr.push(outOfBounds([x + 2, y + 1]));
 
   return arr.filter(el => el !== -1);
 }
 
-console.log(knightMoves([3, 3], [5, 5]))
+knightMoves([0, 0], [1, 6]);
